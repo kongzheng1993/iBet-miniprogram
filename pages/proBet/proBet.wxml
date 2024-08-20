@@ -1,0 +1,25 @@
+<view>
+  <view style="line-height: 100px;">
+    <text class='weui-cells__title' style="font-size: 20px;">欢迎使用专业版！</text>
+  </view>
+  <view class="ballBox">
+    <view wx:for="{{balls}}" wx:for-index="bIndex" wx:key="*this" style="display: flex; margin-top: 5px; width: 100%;">
+      <!-- 红球 -->
+      <view style="display: flex;">
+        <view wx:for="{{item.red}}" wx:for-index="choseRedBallIndex" wx:key="*this">
+          <view class='redBallSelected' style="margin-left: 10px;">{{item}}</view>
+        </view>
+      </view>
+      <!-- 蓝球 -->
+      <view style="display: flex; margin-left: 30px;">
+        <view wx:for="{{item.blue}}" wx:for-index="choseBlueBallIndex" wx:key="*this">
+          <view class='blueBallSelected'>{{item}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <button class="bet-button-red" bindtap="getRandom" wx:if="{{!isShared}}">再来一次</button>
+  <button class="bet-button-blue" open-type="share" data-info='0'>分享</button>
+  <ad unit-id="adunit-ff9e0c09dd51cf9c" ad-type="video" ad-theme="white"></ad>
+</view>

@@ -1,5 +1,7 @@
 // pages/bet/bet.js
 var app = getApp();
+let videoAd = null
+var util = require("../../util/ball.js")
 Page({
   /**
    * 页面的初始数据
@@ -89,6 +91,24 @@ Page({
       })
       this.init()
       this.getRandom()
+    }
+    // 在页面onLoad回调事件中创建激励视频广告实例
+    if (wx.createRewardedVideoAd) {
+      videoAd = wx.createRewardedVideoAd({
+        adUnitId: 'adunit-440eb5f18095a196'
+      })
+      videoAd.onLoad(() => {})
+      videoAd.onError((err) => {
+        console.error('激励视频光告加载失败', err)
+      })
+      videoAd.onClose((res) => {
+        // 跳转专业页面
+        if (res.isEnded) {
+          wx.navigateTo({
+            url: '/pages/proBet/proBet?currentBetId=' + this.data.currentBetId
+          })
+        }
+      })
     }
     wx.hideLoading({
       success: (res) => {},
@@ -230,6 +250,26 @@ Page({
   },
 
   /**
+   * 观看广告
+   */
+  watchVideo: function () {
+    // wx.navigateTo({
+    //   url: '/pages/proBet/proBet?currentBetId=' + this.data.currentBetId
+    // })
+    // 用户触发广告后，显示激励视频广告
+    if (videoAd) {
+      videoAd.show().catch(() => {
+        // 失败重试
+        videoAd.load()
+          .then(() => videoAd.show())
+          .catch(err => {
+            console.error('激励视频 广告显示失败', err)
+          })
+      })
+    }
+  },
+
+  /**
    * 用户点击右上角分享
    */
   onShareAppMessage: function (options) {
@@ -264,28 +304,32 @@ Page({
     }
   },
 
+  tryAgain: function () {
+    
+  },
+
   getRandom: function () {
     let that = this
     switch (that.data.currentBetId) {
       case "1":
         // 双色球
-        let shuangRed = that.getRandomBalls(that.data.currentBet.redBallNum, 1, that.data.currentBet.redBallRange)
-        let shuangBlue = that.getRandomBalls(that.data.currentBet.blueBallNum, 1, that.data.currentBet.blueBallRange)
+        let shuangRed = util.getRandomBalls(that.data.currentBet.redBallNum, 1, that.data.currentBet.redBallRange)
+        let shuangBlue = util.getRandomBalls(that.data.currentBet.blueBallNum, 1, that.data.currentBet.blueBallRange)
         that.setData({
           choseRedBalls: shuangRed,
           choseBlueBalls: shuangBlue
         })
         break;
       case "2":
-        let qiRed = that.getRandomBalls(that.data.currentBet.redBallNum, 1, that.data.currentBet.redBallRange)
+        let qiRed = util.getRandomBalls(that.data.currentBet.redBallNum, 1, that.data.currentBet.redBallRange)
         that.setData({
           choseRedBalls: qiRed
         })
         break;
       case "3":
-        let san1 = that.getRandomBalls(1, 0, 9)
-        let san2 = that.getRandomBalls(1, 0, 9)
-        let san3 = that.getRandomBalls(1, 0, 9)
+        let san1 = util.getRandomBalls(1, 0, 9)
+        let san2 = util.getRandomBalls(1, 0, 9)
+        let san3 = util.getRandomBalls(1, 0, 9)
         that.setData({
           chosethreeDFirst: san1,
           chosethreeDSecond: san2,
@@ -294,36 +338,14 @@ Page({
         break;
       case "4":
         // 大乐透
-        let daletouRed = that.getRandomBalls(that.data.currentBet.redBallNum, 1, that.data.currentBet.redBallRange)
-        let daletouBlue = that.getRandomBalls(that.data.currentBet.blueBallNum, 1, that.data.currentBet.blueBallRange)
+        let daletouRed = util.getRandomBalls(that.data.currentBet.redBallNum, 1, that.data.currentBet.redBallRange)
+        let daletouBlue = util.getRandomBalls(that.data.currentBet.blueBallNum, 1, that.data.currentBet.blueBallRange)
         that.setData({
           choseRedBalls: daletouRed,
           choseBlueBalls: daletouBlue
         })
         break;
     }
-  },
-
-  /**
-   * 
-   * @param {一共多少个数字}} num 
-   * @param {最小值} min 
-   * @param {最大值} max 
-   */
-  getRandomBalls: function (num, min, max) {
-    let balls = []
-    for (let i = 0; i < num;) {
-      let curBall = Math.floor(Math.random() * (max - min + 1)) + min;
-      if (balls.indexOf(curBall) === -1) {
-        // 随机出的数字不存在，才能加入数组
-        balls.push(curBall)
-        i++
-      }
-    }
-    balls.sort(function (a, b) {
-      return a - b
-    });
-    return balls;
   },
 
   /**

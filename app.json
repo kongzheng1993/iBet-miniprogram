@@ -5,7 +5,8 @@
     "pages/bet/bet",
     "pages/help/help",
     "pages/itools/itools",
-    "pages/generatedHtml/generatedHtml"
+    "pages/generatedHtml/generatedHtml",
+    "pages/proBet/proBet"
   ],
   "lazyCodeLoading": "requiredComponents",
   "window": {
@@ -27,12 +28,6 @@
         "text": "我",
         "iconPath": "images/me.png",
         "selectedIconPath": "images/me_selected.png"
-      },
-      {
-        "pagePath": "pages/itools/itools",
-        "text": "工具",
-        "iconPath": "images/tools.png",
-        "selectedIconPath": "images/tools_selected.png"
       }
     ]
   },

@@ -7,7 +7,4 @@
     <input type="nickname" class="weui-input" value="{{nickname}}" style="margin-top: 10px;" placeholder="请输入昵称" bindblur="nicknameInputed" />
     <button wx:if="{{isCheck}}" style="color: red;" type="default" size="mini" bindtap="help">帮助</button>
   </view>
-  <!-- <view>
-    <button bindtap="toShareHtml" size="mini">share html</button>
-  </view> -->
 </view>
